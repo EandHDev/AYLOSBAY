@@ -1,0 +1,95 @@
+.filters-container {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.filter-item {
+  flex: 1;
+  min-width: 200px;
+}
+
+.date-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.date-input-wrapper label {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+
+.date-input-wrapper input[type="date"] {
+  width: 100%;
+}
+
+.date-input-wrapper input[type="date"]:not([value=""]) + label,
+.date-input-wrapper input[type="date"]:focus + label {
+  display: none;
+}
+
+.date-input-wrapper input[type="date"]::-webkit-datetime-edit-text,
+.date-input-wrapper input[type="date"]::-webkit-datetime-edit-month-field,
+.date-input-wrapper input[type="date"]::-webkit-datetime-edit-day-field,
+.date-input-wrapper input[type="date"]::-webkit-datetime-edit-year-field {
+  color: transparent;
+}
+
+.date-input-wrapper input[type="date"]:focus::-webkit-datetime-edit-text,
+.date-input-wrapper input[type="date"]:focus::-webkit-datetime-edit-month-field,
+.date-input-wrapper input[type="date"]:focus::-webkit-datetime-edit-day-field,
+.date-input-wrapper input[type="date"]:focus::-webkit-datetime-edit-year-field,
+.date-input-wrapper
+  input[type="date"]:not([value=""])::-webkit-datetime-edit-text,
+.date-input-wrapper
+  input[type="date"]:not([value=""])::-webkit-datetime-edit-month-field,
+.date-input-wrapper
+  input[type="date"]:not([value=""])::-webkit-datetime-edit-day-field,
+.date-input-wrapper
+  input[type="date"]:not([value=""])::-webkit-datetime-edit-year-field {
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .filter-item {
+    flex: 100%;
+  }
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.mt-5 {
+  margin-top: 3rem;
+}
