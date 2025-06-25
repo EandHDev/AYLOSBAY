@@ -3,6 +3,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./BookingScreen.css";
 
+// Paystack Imports
+import { usePaystackPayment } from "react-paystack"; // Import Paystack hook
+
+// Assuming you have Ant Design installed for messages, otherwise replace with your toast/alert system
+import { message } from "antd"; // npm install antd
+
+// Replace with your actual Paystack Public Key
+const PAYSTACK_PUBLIC_KEY = "pk_test_9ec0a80bbac6a7743513f5ca5a99cf472a1f899d"; // <--- ENSURE THIS IS YOUR REAL PAYSTACK PUBLIC KEY
+
 function BookingScreen() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,49 +29,77 @@ function BookingScreen() {
     rentPerDay,
   } = location.state || {};
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-    if (!location.state) {
-      navigate("/");
-    }
-  }, [user, location.state, navigate]);
-
-  const handlePayment = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const bookingDetails = {
-        room: roomId,
-        roomName,
-        userId: user._id,
-        userName: user.name,
-        fromDate,
-        toDate,
-        totalDays,
-        totalAmount,
-        rentPerDay,
-      };
-
-      const response = await axios.post(
-        "http://localhost:5001/api/bookings/bookroom",
-        bookingDetails
-      );
-
-      setLoading(false);
-      // Navigate to success page or show success message
-      navigate("/booking-success", { state: { bookingId: response.data._id } });
-    } catch (error) {
-      setLoading(false);
-      setError(
-        error.response?.data?.message || "Something went wrong with the booking"
-      );
-    }
+  // Paystack configuration
+  const config = {
+    reference: new Date().getTime().toString(),
+    email: user ? user.email : "guest@example.com",
+    amount: totalAmount * 100, // Amount in pesewas (1 GHS = 100 pesewas)
+    publicKey: PAYSTACK_PUBLIC_KEY,
+    currency: "GHS", // <--- ADD THIS LINE
+    metadata: {
+      bookingDetails: {
+        roomId: roomId,
+        roomName: roomName,
+        fromDate: fromDate,
+        toDate: toDate,
+        userId: user ? user._id : null,
+        userName: user ? user.name : null,
+      },
+    },
   };
 
+  // Initialize Paystack hook
+  const initializePayment = usePaystackPayment(config);
+
+  useEffect(() => {
+    // Redirect if user not logged in or no booking details
+    if (!user) {
+      console.log(
+        "BookingScreen useEffect: Redirecting to /login - user is null"
+      );
+      navigate("/login");
+      return;
+    } else if (!location.state) {
+      console.log(
+        "BookingScreen useEffect: Redirecting to / - location.state is null"
+      );
+      navigate("/");
+      return;
+    }
+    // No Stripe-specific loading here for Paystack
+  }, [user, location.state, navigate]);
+
+  const handlePaystackPayment = () => {
+    setLoading(true); // Set loading state when payment process starts
+    initializePayment({
+      onSuccess: (response) => {
+        // Payment successful on Paystack's side.
+        // Now, verify on backend and save booking.
+        // Paystack redirects to backend /verify-payment/:reference
+        // The backend will then redirect back to /booking-success or /booking-failure
+        message.success("Payment successful! Redirecting for confirmation...");
+        // No direct API call from here needed for verification, as Paystack handles redirect
+        // The backend's /verify-payment route will handle the final booking confirmation.
+      },
+      onClose: () => {
+        message.info("Payment window closed.");
+        setLoading(false); // Reset loading if user closes popup
+      },
+      onLoad: () => {
+        // Optional: show loading spinner or message while Paystack popup loads
+        console.log("Paystack popup loaded.");
+      },
+      onError: (error) => {
+        console.error("Paystack payment error:", error);
+        message.error("Payment failed. Please try again.");
+        setLoading(false); // Reset loading on error
+      },
+    });
+  };
+
+  // Render nothing if essential data is missing (redirect handled by useEffect)
   if (!location.state || !user) {
+    console.log("BookingScreen: Returning null due to missing state or user.");
     return null;
   }
 
@@ -70,9 +107,7 @@ function BookingScreen() {
     <div className="booking-container">
       <div className="booking-card">
         <h2>Booking Details</h2>
-
         {error && <div className="error-message">{error}</div>}
-
         <div className="booking-details">
           <div className="detail-row">
             <span className="detail-label">Name:</span>
@@ -109,11 +144,12 @@ function BookingScreen() {
             <span className="detail-value">${totalAmount}</span>
           </div>
         </div>
-
+        <hr /> {/* Separator for payment section */}
+        <h3 className="mb-3">Payment Information (Paystack)</h3>
         <button
           className="payment-button"
-          onClick={handlePayment}
-          disabled={loading}
+          onClick={handlePaystackPayment}
+          disabled={loading} // Disable button while processing
         >
           {loading ? "Processing..." : "Pay Now"}
         </button>
