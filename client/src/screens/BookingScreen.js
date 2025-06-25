@@ -136,12 +136,12 @@ function BookingScreen() {
 
           <div className="detail-row">
             <span className="detail-label">Rate Per Day:</span>
-            <span className="detail-value">${rentPerDay}</span>
+            <span className="detail-value">GHS{rentPerDay}</span>
           </div>
 
           <div className="detail-row total">
             <span className="detail-label">Total Amount:</span>
-            <span className="detail-value">${totalAmount}</span>
+            <span className="detail-value">GHS{totalAmount}</span>
           </div>
         </div>
         <hr /> {/* Separator for payment section */}
