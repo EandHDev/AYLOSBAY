@@ -19,10 +19,12 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.1",
     "nodemon": "^3.1.9",
+    "paystack-api": "^2.0.6",
     "react-bootstrap": "^2.10.9",
     "react-datepicker": "^8.2.1",
     "react-router-dom": "^7.5.0",
-    "router": "^2.2.0"
+    "router": "^2.2.0",
+    "stripe": "^18.2.1"
   },
   "description": ""
 }

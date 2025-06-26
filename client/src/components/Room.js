@@ -94,7 +94,7 @@ function Room({ room, fromDate, toDate, isBookingAllowed }) {
               <strong>Max Guests:</strong> {maxcount}
             </p>
             <p>
-              <strong>Price:</strong> ${rentperday}/night
+              <strong>Price:</strong> GHS{rentperday}/night
             </p>
           </div>
 
@@ -158,7 +158,7 @@ function Room({ room, fromDate, toDate, isBookingAllowed }) {
                   <strong>Max Guests:</strong> {maxcount}
                 </p>
                 <p>
-                  <strong>Price:</strong> ${rentperday}/night
+                  <strong>Price:</strong> GHS{rentperday}/night
                 </p>
                 <p>
                   <strong>Description:</strong> {description}

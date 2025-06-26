@@ -1,12 +1,19 @@
 const mongoose = require("mongoose");
+// Make sure dotenv is configured here if db.js is loaded before server.js's dotenv.config()
+// Or ensure server.js's dotenv.config() runs before db.js is required.
+// For safety, you can add it here too, but it's usually done once in the main app entry.
+require("dotenv").config(); // <-- ADD THIS LINE TO ENSURE .env IS LOADED
 
-// Make sure database name is explicitly set to 'aylosbay'
-const mongoURL =
-  "mongodb+srv://nigel:kinky69@cluster0.fwox6.mongodb.net/aylosbay/?retryWrites=true&w=majority&appName=Cluster0";
+// Get the MongoDB URL from environment variables
+const mongoURL = process.env.MONGO_URL; // <-- CHANGE THIS LINE
 
-// Add database name in connection options
+console.log("DB.js: Attempting to connect with MONGO_URL:", mongoURL); // <-- ADD THIS LINE FOR DEBUGGING
+
+// Add database name in connection options (optional if already in URI)
 mongoose.connect(mongoURL, {
-  dbName: "aylosbay", // Explicitly set database name
+  // dbName: "aylosbay", // This might be redundant if the database name is already in the mongoURL
+  useNewUrlParser: true, // Add these options back for modern Mongoose
+  useUnifiedTopology: true, // Add these options back for modern Mongoose
 });
 
 const connection = mongoose.connection;
