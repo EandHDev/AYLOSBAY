@@ -77,6 +77,10 @@ function BookingScreen() {
         // Now, verify on backend and save booking.
         // Paystack redirects to backend /verify-payment/:reference
         // The backend will then redirect back to /booking-success or /booking-failure
+        console.log(
+          "Frontend: Paystack onSuccess callback - response:",
+          response
+        );
         message.success("Payment successful! Redirecting for confirmation...");
         // No direct API call from here needed for verification, as Paystack handles redirect
         // The backend's /verify-payment route will handle the final booking confirmation.

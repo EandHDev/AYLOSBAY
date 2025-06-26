@@ -1,0 +1,31 @@
+version: "3.8" # Or latest version
+services:
+  backend:
+    build: ./ # Path to your backend Dockerfile
+    ports:
+      - "5002:5001" # Map port 5001 on host to 5001 in container
+    environment:
+      - MONGO_URL=mongodb+srv://testuser:testpassword123@cluster0.fwox6.mongodb.net/Aylos?retryWrites=true&w=majority&appName=Cluster0
+      - JWT_SECRET=YOUR_JWT_SECRET_HERE
+      - PAYSTACK_SECRET_KEY=YOUR_PAYSTACK_SECRET_KEY_HERE
+      - PORT=5001
+    depends_on:
+      - mongodb # Add this if you're running MongoDB in a container (see below)
+
+  frontend:
+    build: ./client # Path to your frontend Dockerfile
+    ports:
+      - "3000:80" # Map port 3000 on host to 80 in container
+    depends_on:
+      - backend
+
+  # Optional: Run MongoDB in a container (recommended for local development)
+  mongodb:
+    image: mongo:latest # Use the latest official MongoDB image
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db # Persist data
+
+volumes:
+  mongodb_data: # Named volume for MongoDB data persistence
