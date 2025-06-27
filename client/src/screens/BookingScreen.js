@@ -3,14 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./BookingScreen.css";
 
-// Paystack Imports
-import { usePaystackPayment } from "react-paystack"; // Import Paystack hook
-
 // Assuming you have Ant Design installed for messages, otherwise replace with your toast/alert system
 import { message } from "antd"; // npm install antd
-
-// Replace with your actual Paystack Public Key
-const PAYSTACK_PUBLIC_KEY = "pk_test_9ec0a80bbac6a7743513f5ca5a99cf472a1f899d"; // <--- ENSURE THIS IS YOUR REAL PAYSTACK PUBLIC KEY
 
 function BookingScreen() {
   const location = useLocation();
@@ -29,28 +23,6 @@ function BookingScreen() {
     rentPerDay,
   } = location.state || {};
 
-  // Paystack configuration
-  const config = {
-    reference: new Date().getTime().toString(),
-    email: user ? user.email : "guest@example.com",
-    amount: totalAmount * 100, // Amount in pesewas (1 GHS = 100 pesewas)
-    publicKey: PAYSTACK_PUBLIC_KEY,
-    currency: "GHS", // <--- ADD THIS LINE
-    metadata: {
-      bookingDetails: {
-        roomId: roomId,
-        roomName: roomName,
-        fromDate: fromDate,
-        toDate: toDate,
-        userId: user ? user._id : null,
-        userName: user ? user.name : null,
-      },
-    },
-  };
-
-  // Initialize Paystack hook
-  const initializePayment = usePaystackPayment(config);
-
   useEffect(() => {
     // Redirect if user not logged in or no booking details
     if (!user) {
@@ -66,39 +38,71 @@ function BookingScreen() {
       navigate("/");
       return;
     }
-    // No Stripe-specific loading here for Paystack
   }, [user, location.state, navigate]);
 
-  const handlePaystackPayment = () => {
-    setLoading(true); // Set loading state when payment process starts
-    initializePayment({
-      onSuccess: (response) => {
-        // Payment successful on Paystack's side.
-        // Now, verify on backend and save booking.
-        // Paystack redirects to backend /verify-payment/:reference
-        // The backend will then redirect back to /booking-success or /booking-failure
-        console.log(
-          "Frontend: Paystack onSuccess callback - response:",
-          response
-        );
-        message.success("Payment successful! Redirecting for confirmation...");
-        // No direct API call from here needed for verification, as Paystack handles redirect
-        // The backend's /verify-payment route will handle the final booking confirmation.
-      },
-      onClose: () => {
-        message.info("Payment window closed.");
-        setLoading(false); // Reset loading if user closes popup
-      },
-      onLoad: () => {
-        // Optional: show loading spinner or message while Paystack popup loads
-        console.log("Paystack popup loaded.");
-      },
-      onError: (error) => {
-        console.error("Paystack payment error:", error);
-        message.error("Payment failed. Please try again.");
-        setLoading(false); // Reset loading on error
-      },
-    });
+  const handlePaystackPayment = async () => {
+    setLoading(true);
+    setError(""); // Clear any previous errors
+
+    try {
+      console.log("Frontend: Initializing payment for amount:", totalAmount);
+
+      // First, initialize payment on your backend
+      const response = await axios.post(
+        "http://localhost:5001/api/paystack/initialize-payment",
+        {
+          amount: totalAmount * 100, // Convert to pesewas (GHS to pesewas)
+          email: user.email,
+          bookingDetails: {
+            roomId: roomId,
+            roomName: roomName,
+            fromDate: fromDate,
+            toDate: toDate,
+            totalDays: totalDays,
+            totalAmount: totalAmount,
+            rentPerDay: rentPerDay,
+            userId: user._id,
+            userName: user.name,
+          },
+        }
+      );
+
+      console.log("Frontend: Backend response:", response.data);
+
+      if (response.data.status) {
+        // Backend successfully initialized payment, redirect to Paystack
+        message.success("Redirecting to payment gateway...");
+
+        // Redirect to Paystack checkout page
+        window.location.href = response.data.data.authorization_url;
+      } else {
+        // Backend returned an error
+        setError(response.data.message || "Failed to initialize payment");
+        message.error("Failed to initialize payment");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Frontend: Payment initialization error:", error);
+
+      // Handle different types of errors
+      if (error.response) {
+        // Server responded with error status
+        const errorMessage =
+          error.response.data?.message || "Payment initialization failed";
+        setError(errorMessage);
+        message.error(errorMessage);
+      } else if (error.request) {
+        // Request was made but no response received
+        setError("Unable to connect to payment server");
+        message.error("Unable to connect to payment server");
+      } else {
+        // Something else happened
+        setError("An unexpected error occurred");
+        message.error("An unexpected error occurred");
+      }
+
+      setLoading(false);
+    }
   };
 
   // Render nothing if essential data is missing (redirect handled by useEffect)
@@ -116,6 +120,11 @@ function BookingScreen() {
           <div className="detail-row">
             <span className="detail-label">Name:</span>
             <span className="detail-value">{user.name}</span>
+          </div>
+
+          <div className="detail-row">
+            <span className="detail-label">Email:</span>
+            <span className="detail-value">{user.email}</span>
           </div>
 
           <div className="detail-row">
@@ -140,23 +149,36 @@ function BookingScreen() {
 
           <div className="detail-row">
             <span className="detail-label">Rate Per Day:</span>
-            <span className="detail-value">GHS{rentPerDay}</span>
+            <span className="detail-value">GHS {rentPerDay}</span>
           </div>
 
           <div className="detail-row total">
             <span className="detail-label">Total Amount:</span>
-            <span className="detail-value">GHS{totalAmount}</span>
+            <span className="detail-value">GHS {totalAmount}</span>
           </div>
         </div>
         <hr /> {/* Separator for payment section */}
-        <h3 className="mb-3">Payment Information (Paystack)</h3>
-        <button
-          className="payment-button"
-          onClick={handlePaystackPayment}
-          disabled={loading} // Disable button while processing
-        >
-          {loading ? "Processing..." : "Pay Now"}
-        </button>
+        <div className="payment-section">
+          <h3 className="mb-3">Payment Information</h3>
+          <p className="payment-info">
+            You will be redirected to Paystack to complete your payment
+            securely.
+          </p>
+
+          <button
+            className="payment-button"
+            onClick={handlePaystackPayment}
+            disabled={loading} // Disable button while processing
+          >
+            {loading ? "Processing..." : `Pay GHS ${totalAmount} with Paystack`}
+          </button>
+
+          {loading && (
+            <div className="loading-message">
+              <p>Initializing secure payment...</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
