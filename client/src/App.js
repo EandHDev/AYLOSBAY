@@ -4,16 +4,15 @@ import Navbar from "./components/Navbar";
 import Homescreen from "./screens/Homescreen";
 import AddRoom from "./screens/AddRoom";
 import AdminRoom from "./screens/AdminRoom";
-import BookingScreen from "./screens/BookingScreen"; // Make sure this is imported
+import BookingScreen from "./screens/BookingScreen";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import "antd/dist/reset.css";
-import BookingSuccessScreen from "./screens/BookingSuccessScreen"; // Make sure this is imported
-import BookingFailureScreen from "./screens/BookingFailureScreen"; // Make sure this is imported
+import BookingSuccessScreen from "./screens/BookingSuccessScreen";
+import BookingFailureScreen from "./screens/BookingFailureScreen";
 import AdminPanel from "./components/AdminPanel";
 
-// Error Boundary Component
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +37,6 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Wrap each route in an error boundary
 const RouteWithErrorBoundary = ({ element }) => (
   <ErrorBoundary>{element}</ErrorBoundary>
 );
@@ -67,7 +65,6 @@ function App() {
             path="/admin/rooms"
             element={<RouteWithErrorBoundary element={<AdminRoom />} />}
           />
-          {/* --- ADD THIS ROUTE BACK --- */}
           <Route
             path="/book/:roomid"
             element={<RouteWithErrorBoundary element={<BookingScreen />} />}
@@ -76,7 +73,6 @@ function App() {
           {/* --- END ADDITION --- */}
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/login" element={<LoginScreen />} />
-          {/* --- ADD THESE NEW ROUTES FOR PAYSTACK REDIRECTS --- */}
           <Route
             path="/booking-success"
             element={
@@ -89,7 +85,6 @@ function App() {
               <RouteWithErrorBoundary element={<BookingFailureScreen />} />
             }
           />
-          {/* --- END ADDITION --- */}
         </Routes>
       </div>
     </BrowserRouter>

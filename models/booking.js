@@ -21,12 +21,12 @@ const bookingSchema = new mongoose.Schema(
     totalDays: { type: Number, required: true },
     totalAmount: { type: Number, required: true },
     rentPerDay: { type: Number, required: true },
-    transactionId: { type: String, required: true }, // Add this for the Paystack transaction reference
-    status: { type: String, required: true, default: "booked" }, // Add a status field
+    transactionId: { type: String, required: true },
+    status: { type: String, required: true, default: "booked" },
     reference: { type: String, required: true, unique: true },
   },
   { timestamps: true }
 );
 
-const booking = mongoose.model("bookings", bookingSchema); // Use 'bookings' as collection name
+const booking = mongoose.model("bookings", bookingSchema);
 module.exports = booking;

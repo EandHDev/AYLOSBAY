@@ -33,7 +33,7 @@ const testGmailEmail = async () => {
 
     const testUserDetails = {
       name: "Test User",
-      email: "nigel@ianaitch.com", // Your email to receive the test
+      email: "nigel@ianaitch.com",
     };
 
     console.log("📤 Sending test booking confirmation email...");

@@ -1,5 +1,3 @@
-// Create this file: client/src/components/AdminPanel.js
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -150,8 +148,6 @@ function AdminPanel() {
           </button>
         </div>
       </div>
-
-      {/* Bookings List */}
       <div>
         <h4>Recent Bookings ({bookings.length})</h4>
         <div style={{ overflowX: "auto" }}>

@@ -55,7 +55,6 @@ function Room({ room, fromDate, toDate, isBookingAllowed }) {
     const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
     const totalAmount = totalDays * room.rentperday;
 
-    // Pass booking details through navigation
     navigate(`/book/${room._id}`, {
       state: {
         roomId: room._id,

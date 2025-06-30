@@ -1,7 +1,5 @@
-// Gmail Email Service using Nodemailer (services/emailService.js)
 const nodemailer = require("nodemailer");
 
-// Create Gmail transporter
 const createGmailTransporter = () => {
   return nodemailer.createTransport({
     service: "gmail",
@@ -205,7 +203,6 @@ const sendBookingConfirmation = async (bookingDetails, userDetails) => {
   }
 };
 
-// Export the function
 module.exports = {
   sendBookingConfirmation,
 };
