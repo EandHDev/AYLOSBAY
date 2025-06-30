@@ -1,9 +1,7 @@
-// Simple rooms route (routes/roomsRoute.js)
 const express = require("express");
 const router = express.Router();
 const Booking = require("../models/booking"); // We'll need this for availability checking
 
-// Static room data - matches your existing rooms
 const rooms = [
   {
     _id: "685c35e7eeb51f8883221a48",
