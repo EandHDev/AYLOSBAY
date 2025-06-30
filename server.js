@@ -10,7 +10,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dbConfig = require("./db"); // This will now have access to process.env.MONGO_URL
-const roomsRoute = require("./routes/roomsRoute");
+//const roomsRoute = require("./routes/roomsRoute");
 const usersRoute = require("./routes/userRoute");
 const paystackRoute = require("./routes/paystackRoute");
 
@@ -26,7 +26,7 @@ app.use(
 app.use(express.json());
 
 // Routes
-app.use("/api/rooms", roomsRoute);
+app.use("/api/rooms", require("./routes/roomsRoute"));
 app.use("/api/users", usersRoute);
 app.use("/api/paystack", paystackRoute);
 

@@ -1,33 +1,39 @@
 const express = require("express");
 const router = express.Router();
-const Booking = require("../models/booking"); // Import your Booking model
-const axios = require("axios"); // Use axios instead of paystack-api library
+const Booking = require("../models/booking");
+const axios = require("axios");
+const { sendBookingConfirmation } = require("../services/emailService"); // Import email service
 
-// Initialize payment route
+// Generate booking reference function
+const generateBookingReference = () => {
+  const year = new Date().getFullYear();
+  const randomNum = Math.floor(Math.random() * 1000000)
+    .toString()
+    .padStart(6, "0");
+  return `HTL-${year}-${randomNum}`;
+};
+
+// Initialize payment route (unchanged)
 router.post("/initialize-payment", async (req, res) => {
   const { amount, email, bookingDetails } = req.body;
 
   try {
     const reference = new Date().getTime().toString();
-
-    // Create callback URL - MUST be your deployed backend URL for production
     const callbackUrl = `${
       process.env.BACKEND_URL || "http://localhost:5001"
     }/api/paystack/verify-payment/${reference}`;
 
     console.log("Backend: Initializing payment with reference:", reference);
-    console.log("Backend: Callback URL:", callbackUrl);
-    console.log("Backend: Amount:", amount, "Email:", email);
 
     const response = await axios.post(
       "https://api.paystack.co/transaction/initialize",
       {
-        amount: amount, // Amount in pesewas
+        amount: amount,
         email: email,
         reference: reference,
         callback_url: callbackUrl,
         metadata: {
-          bookingDetails: JSON.stringify(bookingDetails), // Stringify here
+          bookingDetails: JSON.stringify(bookingDetails),
         },
       },
       {
@@ -37,8 +43,6 @@ router.post("/initialize-payment", async (req, res) => {
         },
       }
     );
-
-    console.log("Backend: Paystack initialization response:", response.data);
 
     if (response.data.status) {
       res.json({
@@ -50,7 +54,6 @@ router.post("/initialize-payment", async (req, res) => {
         },
       });
     } else {
-      console.error("Backend: Payment initialization failed:", response.data);
       res
         .status(400)
         .json({ status: false, message: "Payment initialization failed" });
@@ -61,7 +64,7 @@ router.post("/initialize-payment", async (req, res) => {
   }
 });
 
-// Verify payment route
+// Updated verify payment route with email functionality
 router.get("/verify-payment/:reference", async (req, res) => {
   const { reference } = req.params;
   console.log("Backend: Verifying payment for reference:", reference);
@@ -96,22 +99,26 @@ router.get("/verify-payment/:reference", async (req, res) => {
         );
       }
 
-      // Create new booking with both reference fields and individual fields for your schema
+      // Generate unique booking reference
+      const bookingReference = generateBookingReference();
+
+      // Create new booking with both reference fields and individual fields
       const newBooking = new Booking({
-        // Reference fields (required by your schema)
+        // Reference fields (for relationships)
         room: bookingDetails.roomId,
         user: bookingDetails.userId,
-        // Individual fields (also required by your schema)
+        // Individual fields (for direct access)
         roomId: bookingDetails.roomId,
         roomName: bookingDetails.roomName,
         userId: bookingDetails.userId,
         userName: bookingDetails.userName,
         fromDate: bookingDetails.fromDate,
         toDate: bookingDetails.toDate,
-        totalAmount: response.data.data.amount / 100, // Convert from pesewas to GHS
+        totalAmount: response.data.data.amount / 100,
         totalDays: bookingDetails.totalDays || 1,
         rentPerDay: bookingDetails.rentPerDay,
         transactionId: response.data.data.reference,
+        reference: bookingReference, // Add booking reference
         status: "booked",
       });
 
@@ -119,11 +126,48 @@ router.get("/verify-payment/:reference", async (req, res) => {
         await newBooking.save();
         console.log("Backend: Booking saved successfully!", newBooking._id);
 
-        // Redirect to success page
+        // 🎯 SEND CONFIRMATION EMAIL
+        console.log("Backend: Sending booking confirmation email...");
+
+        // Prepare email data
+        const emailBookingDetails = {
+          reference: bookingReference,
+          roomName: bookingDetails.roomName,
+          fromDate: bookingDetails.fromDate,
+          toDate: bookingDetails.toDate,
+          totalDays: bookingDetails.totalDays,
+          totalAmount: response.data.data.amount / 100,
+          transactionId: response.data.data.reference,
+        };
+
+        const emailUserDetails = {
+          name: bookingDetails.userName,
+          email: response.data.data.customer.email,
+        };
+
+        // Send the email
+        const emailResult = await sendBookingConfirmation(
+          emailBookingDetails,
+          emailUserDetails
+        );
+
+        if (emailResult.success) {
+          console.log(
+            "Backend: ✅ Booking confirmation email sent successfully"
+          );
+        } else {
+          console.error(
+            "Backend: ❌ Failed to send booking confirmation email:",
+            emailResult.message
+          );
+          // Don't fail the booking if email fails, just log it
+        }
+
+        // Redirect to success page with booking reference
         res.redirect(
           `${
             process.env.FRONTEND_URL || "http://localhost:3000"
-          }/booking-success?reference=${reference}&bookingId=${newBooking._id}`
+          }/booking-success?reference=${reference}&bookingRef=${bookingReference}`
         );
       } catch (saveError) {
         console.error("Backend: Error saving booking:", saveError);
@@ -134,10 +178,7 @@ router.get("/verify-payment/:reference", async (req, res) => {
         );
       }
     } else {
-      console.log(
-        "Backend: Payment verification failed or not successful:",
-        response.data.data
-      );
+      console.log("Backend: Payment verification failed:", response.data.data);
       res.redirect(
         `${
           process.env.FRONTEND_URL || "http://localhost:3000"
@@ -154,4 +195,111 @@ router.get("/verify-payment/:reference", async (req, res) => {
   }
 });
 
+// Add these admin routes to your paystackRoute.js file
+
+// Get all bookings (for admin)
+router.get("/admin/bookings", async (req, res) => {
+  try {
+    const bookings = await Booking.find({})
+      .sort({ createdAt: -1 }) // Newest first
+      .limit(50); // Limit for performance
+
+    console.log("Admin: Fetched", bookings.length, "bookings");
+
+    res.json({
+      success: true,
+      data: bookings,
+      count: bookings.length,
+    });
+  } catch (error) {
+    console.error("Admin: Error fetching bookings:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Cancel a booking (makes room available again)
+router.put("/admin/bookings/:id/cancel", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    const booking = await Booking.findByIdAndUpdate(
+      id,
+      {
+        status: "cancelled",
+        cancelReason: reason || "Cancelled by admin",
+        cancelledAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
+    }
+
+    console.log("Admin: Cancelled booking", id, "for room", booking.roomName);
+
+    res.json({
+      success: true,
+      message: "Booking cancelled successfully",
+      data: booking,
+    });
+  } catch (error) {
+    console.error("Admin: Error cancelling booking:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Delete a booking completely (makes room available again)
+router.delete("/admin/bookings/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const booking = await Booking.findByIdAndDelete(id);
+
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
+    }
+
+    console.log("Admin: Deleted booking", id, "for room", booking.roomName);
+
+    res.json({
+      success: true,
+      message: "Booking deleted successfully",
+      data: booking,
+    });
+  } catch (error) {
+    console.error("Admin: Error deleting booking:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Get bookings for specific dates (to see conflicts)
+router.post("/admin/bookings/conflicts", async (req, res) => {
+  try {
+    const { fromDate, toDate } = req.body;
+
+    const conflictingBookings = await Booking.find({
+      status: "booked",
+      $or: [
+        { fromDate: { $gte: fromDate, $lt: toDate } },
+        { toDate: { $gt: fromDate, $lte: toDate } },
+        { fromDate: { $lte: fromDate }, toDate: { $gte: toDate } },
+      ],
+    });
+
+    res.json({
+      success: true,
+      data: conflictingBookings,
+      count: conflictingBookings.length,
+    });
+  } catch (error) {
+    console.error("Admin: Error checking conflicts:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 module.exports = router;

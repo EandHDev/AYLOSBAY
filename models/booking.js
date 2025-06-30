@@ -23,6 +23,7 @@ const bookingSchema = new mongoose.Schema(
     rentPerDay: { type: Number, required: true },
     transactionId: { type: String, required: true }, // Add this for the Paystack transaction reference
     status: { type: String, required: true, default: "booked" }, // Add a status field
+    reference: { type: String, required: true, unique: true },
   },
   { timestamps: true }
 );

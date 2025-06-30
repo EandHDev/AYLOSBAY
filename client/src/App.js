@@ -11,6 +11,7 @@ import LoginScreen from "./screens/LoginScreen";
 import "antd/dist/reset.css";
 import BookingSuccessScreen from "./screens/BookingSuccessScreen"; // Make sure this is imported
 import BookingFailureScreen from "./screens/BookingFailureScreen"; // Make sure this is imported
+import AdminPanel from "./components/AdminPanel";
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -71,6 +72,7 @@ function App() {
             path="/book/:roomid"
             element={<RouteWithErrorBoundary element={<BookingScreen />} />}
           />
+          <Route path="/admin" element={<AdminPanel />} />
           {/* --- END ADDITION --- */}
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/login" element={<LoginScreen />} />
