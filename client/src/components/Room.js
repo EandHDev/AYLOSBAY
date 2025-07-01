@@ -97,6 +97,42 @@ function Room({ room, fromDate, toDate, isBookingAllowed }) {
             </p>
           </div>
 
+          {/* Availability Notice - MOVED INSIDE CARD */}
+          {fromDate && toDate && (
+            <div
+              style={{
+                margin: "15px 0",
+                padding: "12px",
+                borderRadius: "8px",
+                textAlign: "center",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              {isBookingAllowed ? (
+                <div
+                  style={{
+                    backgroundColor: "#d4edda",
+                    color: "#155724",
+                    border: "1px solid #c3e6cb",
+                  }}
+                >
+                  ✅ Available for selected dates
+                </div>
+              ) : (
+                <div
+                  style={{
+                    backgroundColor: "#f8d7da",
+                    color: "#721c24",
+                    border: "1px solid #f5c6cb",
+                  }}
+                >
+                  ❌ Not available for selected dates
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="button-group">
             <button className="btn-view" onClick={() => setShowModal(true)}>
               View Details
