@@ -12,6 +12,7 @@ import "antd/dist/reset.css";
 import BookingSuccessScreen from "./screens/BookingSuccessScreen";
 import BookingFailureScreen from "./screens/BookingFailureScreen";
 import AdminPanel from "./components/AdminPanel";
+import UserDashboard from "./components/UserDashboard";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -70,6 +71,7 @@ function App() {
             element={<RouteWithErrorBoundary element={<BookingScreen />} />}
           />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/profile" element={<UserDashboard />} />
           {/* --- END ADDITION --- */}
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/login" element={<LoginScreen />} />

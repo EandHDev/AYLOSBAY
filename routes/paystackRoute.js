@@ -174,7 +174,7 @@ router.get("/verify-payment/:reference", async (req, res) => {
         res.redirect(
           `${
             process.env.FRONTEND_URL || "http://localhost:3000"
-          }/booking-failure?reference=${reference}&error=booking_save`
+          }/booking-success?reference=${reference}&bookingRef=${bookingReference}`
         );
       }
     } else {
@@ -300,6 +300,147 @@ router.post("/admin/bookings/conflicts", async (req, res) => {
   } catch (error) {
     console.error("Admin: Error checking conflicts:", error);
     res.status(500).json({ success: false, message: error.message });
+  }
+});
+router.get("/user/bookings/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    console.log("API: Fetching bookings for user:", userId);
+
+    const userBookings = await Booking.find({ userId: userId })
+      .sort({ createdAt: -1 }) // Most recent first
+      .lean(); // For better performance
+
+    console.log("API: Found", userBookings.length, "bookings for user");
+
+    res.json({
+      success: true,
+      data: userBookings,
+      count: userBookings.length,
+    });
+  } catch (error) {
+    console.error("API: Error fetching user bookings:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching your bookings",
+      error: error.message,
+    });
+  }
+});
+
+// Get a specific booking by ID (for detailed view)
+router.get("/booking/:bookingId", async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    console.log("API: Found booking:", booking.reference || booking._id);
+
+    res.json({
+      success: true,
+      data: booking,
+    });
+  } catch (error) {
+    console.error("API: Error fetching booking:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching booking details",
+      error: error.message,
+    });
+  }
+});
+
+// Update booking status (for user cancellations, if you want to allow this)
+router.put("/user/bookings/:bookingId/cancel", async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const { userId, reason } = req.body;
+
+    // Verify the booking belongs to this user
+    const booking = await Booking.findOne({
+      _id: bookingId,
+      userId: userId,
+    });
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found or not authorized",
+      });
+    }
+
+    // Check if booking can be cancelled (e.g., not in the past)
+    const today = new Date();
+    const checkInDate = new Date(booking.fromDate);
+
+    if (checkInDate <= today) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot cancel booking - check-in date has passed",
+      });
+    }
+
+    // Update booking status
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      {
+        status: "cancelled",
+        cancelReason: reason || "Cancelled by guest",
+        cancelledAt: new Date(),
+      },
+      { new: true }
+    );
+
+    console.log("API: User cancelled booking:", booking.reference || bookingId);
+
+    res.json({
+      success: true,
+      message: "Booking cancelled successfully",
+      data: updatedBooking,
+    });
+  } catch (error) {
+    console.error("API: Error cancelling booking:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error cancelling booking",
+      error: error.message,
+    });
+  }
+});
+// Get bookings for a specific user
+router.get("/user/bookings/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    console.log("API: Fetching bookings for user:", userId);
+
+    const userBookings = await Booking.find({ userId: userId })
+      .sort({ createdAt: -1 }) // Most recent first
+      .lean();
+
+    console.log("API: Found", userBookings.length, "bookings for user");
+
+    res.json({
+      success: true,
+      data: userBookings,
+      count: userBookings.length,
+    });
+  } catch (error) {
+    console.error("API: Error fetching user bookings:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching your bookings",
+      error: error.message,
+    });
   }
 });
 module.exports = router;
