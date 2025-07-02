@@ -13,7 +13,7 @@ function AdminRoom() {
   const fetchRooms = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/rooms/getallrooms"
+        `${process.env.REACT_APP_API_URL}/api/rooms/getallrooms`
       );
       setRooms(response.data);
       setLoading(false);
@@ -33,7 +33,7 @@ function AdminRoom() {
       reader.onloadend = async () => {
         try {
           await axios.post(
-            `http://localhost:5001/api/upload/uploadimage/${roomId}`,
+            `${process.env.REACT_APP_API_URL}/api/upload/uploadimage/${roomId}`,
             {
               image: reader.result,
             }

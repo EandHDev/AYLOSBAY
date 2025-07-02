@@ -49,7 +49,7 @@ function BookingScreen() {
 
       // First, initialize payment on your backend
       const response = await axios.post(
-        "http://localhost:5001/api/paystack/initialize-payment",
+        `${process.env.REACT_APP_API_URL}/api/paystack/initialize-payment`,
         {
           amount: totalAmount * 100, // Convert to pesewas (GHS to pesewas)
           email: user.email,

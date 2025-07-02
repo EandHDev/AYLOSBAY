@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Use environment variable with fallback to localhost
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
+const API_URL =
+  process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL}`;
 
 console.log("API URL:", API_URL); // Debug log to verify URL
 

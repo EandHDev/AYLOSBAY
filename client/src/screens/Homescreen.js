@@ -22,7 +22,7 @@ function Homescreen() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:5001/api/rooms/getallrooms"
+        "${process.env.REACT_APP_API_URL}/api/rooms/getallrooms"
       );
 
       if (!Array.isArray(response.data)) {
@@ -72,7 +72,7 @@ function Homescreen() {
       console.log("Checking availability for:", fromDate, "to", toDate);
 
       const response = await axios.post(
-        "http://localhost:5001/api/rooms/check-availability",
+        `${process.env.REACT_APP_API_URL}/api/rooms/check-availability`,
         {
           fromDate,
           toDate,

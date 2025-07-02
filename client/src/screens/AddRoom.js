@@ -16,7 +16,7 @@ function AddRoom() {
     e.preventDefault();
     try {
       const result = await axios.post(
-        "http://localhost:5001/api/rooms/addroom",
+        `${process.env.REACT_APP_API_URL}/api/rooms/addroom`,
         room
       );
       console.log(result.data);

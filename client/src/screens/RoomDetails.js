@@ -14,7 +14,7 @@ function RoomDetails() {
       try {
         setLoading(true);
         const { data } = await axios.get(
-          `http://localhost:5001/api/rooms/${roomid}`
+          `${process.env.REACT_APP_API_URL}/api/rooms/${roomid}`
         );
         setRoom(data);
       } catch (err) {

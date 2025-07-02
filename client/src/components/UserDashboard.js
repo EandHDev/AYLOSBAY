@@ -16,7 +16,7 @@ function UserDashboard() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:5001/api/paystack/user/bookings/${user._id}`
+        `${process.env.REACT_APP_API_URL}/api/paystack/user/bookings/${user._id}`
       );
 
       if (response.data.success) {

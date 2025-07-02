@@ -13,7 +13,7 @@ function ImageUpload({ onUploadSuccess }) {
     reader.onloadend = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5001/api/upload/uploadimage",
+          `${process.env.REACT_APP_API_URL}/api/upload/uploadimage`,
           {
             image: reader.result,
           }

@@ -20,7 +20,7 @@ router.post("/initialize-payment", async (req, res) => {
   try {
     const reference = new Date().getTime().toString();
     const callbackUrl = `${
-      process.env.BACKEND_URL || "http://localhost:5001"
+      process.env.BACKEND_URL || `${process.env.REACT_APP_API_URL}`
     }/api/paystack/verify-payment/${reference}`;
 
     console.log("Backend: Initializing payment with reference:", reference);

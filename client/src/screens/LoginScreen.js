@@ -26,7 +26,7 @@ function LoginScreen() {
       setLoading(true);
       setError("");
       const response = await axios.post(
-        "http://localhost:5001/api/users/login",
+        `${process.env.REACT_APP_API_URL}/api/users/login`,
         {
           email: formData.email,
           password: formData.password,
