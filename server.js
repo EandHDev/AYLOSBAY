@@ -12,6 +12,7 @@ const dbConfig = require("./db");
 //const roomsRoute = require("./routes/roomsRoute");
 const usersRoute = require("./routes/userRoute");
 const paystackRoute = require("./routes/paystackRoute");
+const { router: authRouter, verifyAdminToken } = require("./routes/auth");
 
 // Add the CORS configuration here, before any routes
 app.use(
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use("/api/rooms", require("./routes/roomsRoute"));
 app.use("/api/users", usersRoute);
 app.use("/api/paystack", paystackRoute);
+app.use("/api/auth", authRouter);
 
 const port = process.env.PORT || 5001;
 app.listen(port, () => console.log(`Server running on port ${port}`));
