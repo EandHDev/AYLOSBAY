@@ -22,7 +22,7 @@ function Homescreen() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "${process.env.REACT_APP_API_URL}/api/rooms/getallrooms"
+        `${process.env.REACT_APP_API_URL}/api/rooms/getallrooms`
       );
 
       if (!Array.isArray(response.data)) {
