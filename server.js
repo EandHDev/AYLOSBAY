@@ -9,7 +9,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dbConfig = require("./db");
-//const roomsRoute = require("./routes/roomsRoute");
+const roomsRoute = require("./routes/roomsRoute");
 const usersRoute = require("./routes/userRoute");
 const paystackRoute = require("./routes/paystackRoute");
 const { router: authRouter, verifyAdminToken } = require("./routes/auth");
@@ -17,7 +17,10 @@ const { router: authRouter, verifyAdminToken } = require("./routes/auth");
 // Add the CORS configuration here, before any routes
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://main.d2efko68ec6usk.amplifyapp.com"
+    ],
     credentials: true,
   })
 );
