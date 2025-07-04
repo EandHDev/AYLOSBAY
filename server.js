@@ -19,8 +19,13 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://main.d2efko68ec6usk.amplifyapp.com"
+      "https://main.d2efko68ec6usk.amplifyapp.com",
+      "https://cors-anywhere.herokuapp.com",
+      "https://api.codetabs.com",
+      "https://thingproxy.freeboard.io"
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
 );
