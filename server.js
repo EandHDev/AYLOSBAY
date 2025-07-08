@@ -1,4 +1,4 @@
-require("dotenv").config(); // This should be at the very top
+require("dotenv").config();
 
 console.log(
   "Server.js: process.env.STRIPE_SECRET_KEY (after dotenv.config()):",
@@ -14,13 +14,13 @@ const usersRoute = require("./routes/userRoute");
 const paystackRoute = require("./routes/paystackRoute");
 const { router: authRouter, verifyAdminToken } = require("./routes/auth");
 
-// FIXED: Corrected your Amplify domain URL and improved CORS configuration
+// CORS configuration
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://main.d2e1ko68ec6usk.amplifyapp.com", // FIXED: Corrected from d2efko68ec6usk
-      "https://d2e1ko68ec6usk.amplifyapp.com", // Added without subdomain as backup
+      "https://main.d2e1ko68ec6usk.amplifyapp.com",
+      "https://d2e1ko68ec6usk.amplifyapp.com"
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
@@ -35,14 +35,8 @@ app.use(
   })
 );
 
-// FIXED: Simplified manual CORS headers (removed conflicting configuration)
-app.use((req, res, next) => {
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
+// Handle preflight requests
+app.options('*', cors());
 
 // Body parser middleware
 app.use(express.json());
@@ -60,10 +54,8 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
 
-// REMOVED: The custom proxy endpoint (no longer needed with proper CORS)
-
-// Your existing API routes
-app.use("/api/rooms", require("./routes/roomsRoute"));
+// API routes
+app.use("/api/rooms", roomsRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/paystack", paystackRoute);
 app.use("/api/auth", authRouter);
