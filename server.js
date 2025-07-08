@@ -60,5 +60,5 @@ app.use("/api/users", usersRoute);
 app.use("/api/paystack", paystackRoute);
 app.use("/api/auth", authRouter);
 
-const port = process.env.PORT || 5001;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => console.log(`Server running on port ${port}`));
