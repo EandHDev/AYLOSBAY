@@ -8,6 +8,9 @@ const PROXY_BASE = process.env.REACT_APP_API_URL;
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
 
+console.log("PROXY_BASE being used:", PROXY_BASE);
+console.log("Full login URL:", `${PROXY_BASE}/api/auth/admin-login`);
+
 // Configure axios to include auth token
 const setAuthToken = (token) => {
   if (token) {
