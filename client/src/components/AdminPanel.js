@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Working proxy URL - same as rooms use
-const PROXY_BASE = process.env.REACT_APP_API_URL;
+const PROXY_BASE = "https://cors-anywhere.herokuapp.com/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
