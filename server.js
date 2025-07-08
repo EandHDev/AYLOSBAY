@@ -66,7 +66,42 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
-// Routes
+// Health check routes
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Aylos Bay Hotel Booking API is running',
+    status: 'healthy',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy' });
+});
+
+// Custom proxy endpoint to handle CORS issues
+app.use('/api/proxy', (req, res) => {
+  // Remove /proxy from the path and forward to actual endpoint
+  const targetPath = req.originalUrl.replace('/api/proxy', '/api');
+  
+  // Forward the request internally
+  req.url = targetPath;
+  
+  // Continue to the actual route handlers
+  if (targetPath.startsWith('/api/users')) {
+    return usersRoute(req, res);
+  } else if (targetPath.startsWith('/api/auth')) {
+    return authRouter(req, res);
+  } else if (targetPath.startsWith('/api/rooms')) {
+    return roomsRoute(req, res);
+  } else if (targetPath.startsWith('/api/paystack')) {
+    return paystackRoute(req, res);
+  } else {
+    res.status(404).json({ error: 'Endpoint not found' });
+  }
+});
+
+// Your existing API routes
 app.use("/api/rooms", require("./routes/roomsRoute"));
 app.use("/api/users", usersRoute);
 app.use("/api/paystack", paystackRoute);
