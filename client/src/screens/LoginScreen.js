@@ -25,8 +25,10 @@ function LoginScreen() {
     try {
       setLoading(true);
       setError("");
+      
+      // Use different proxy for auth calls
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/users/login`,
+        `https://thingproxy.freeboard.io/fetch/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/login`,
         {
           email: formData.email,
           password: formData.password,
