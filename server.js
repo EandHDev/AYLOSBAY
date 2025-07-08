@@ -14,15 +14,13 @@ const usersRoute = require("./routes/userRoute");
 const paystackRoute = require("./routes/paystackRoute");
 const { router: authRouter, verifyAdminToken } = require("./routes/auth");
 
-// Add the CORS configuration here, before any routes
+// FIXED: Corrected your Amplify domain URL and improved CORS configuration
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://main.d2efko68ec6usk.amplifyapp.com",
-      "https://cors-anywhere.herokuapp.com",
-      "https://api.codetabs.com",
-      "https://thingproxy.freeboard.io"
+      "https://main.d2e1ko68ec6usk.amplifyapp.com", // FIXED: Corrected from d2efko68ec6usk
+      "https://d2e1ko68ec6usk.amplifyapp.com", // Added without subdomain as backup
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
@@ -33,28 +31,23 @@ app.use(
       'Origin'
     ],
     credentials: true,
-    optionsSuccessStatus: 200 // for legacy browser support
+    optionsSuccessStatus: 200
   })
 );
 
+// FIXED: Simplified manual CORS headers (removed conflicting configuration)
 app.use((req, res, next) => {
-  // Allow all origins for proxy requests
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.header('Access-Control-Max-Age', '86400'); // 24 hours
-  
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
   next();
 });
 
 // Body parser middleware
 app.use(express.json());
 
+// Health check routes
 app.get('/', (req, res) => {
   res.status(200).json({ 
     message: 'Aylos Bay Hotel Booking API is running',
@@ -66,40 +59,8 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
-// Health check routes
-app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Aylos Bay Hotel Booking API is running',
-    status: 'healthy',
-    timestamp: new Date().toISOString()
-  });
-});
 
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy' });
-});
-
-// Custom proxy endpoint to handle CORS issues
-app.use('/api/proxy', (req, res) => {
-  // Remove /proxy from the path and forward to actual endpoint
-  const targetPath = req.originalUrl.replace('/api/proxy', '/api');
-  
-  // Forward the request internally
-  req.url = targetPath;
-  
-  // Continue to the actual route handlers
-  if (targetPath.startsWith('/api/users')) {
-    return usersRoute(req, res);
-  } else if (targetPath.startsWith('/api/auth')) {
-    return authRouter(req, res);
-  } else if (targetPath.startsWith('/api/rooms')) {
-    return roomsRoute(req, res);
-  } else if (targetPath.startsWith('/api/paystack')) {
-    return paystackRoute(req, res);
-  } else {
-    res.status(404).json({ error: 'Endpoint not found' });
-  }
-});
+// REMOVED: The custom proxy endpoint (no longer needed with proper CORS)
 
 // Your existing API routes
 app.use("/api/rooms", require("./routes/roomsRoute"));
