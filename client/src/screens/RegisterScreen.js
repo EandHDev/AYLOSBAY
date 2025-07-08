@@ -1,3 +1,110 @@
+// LoginScreen.js - Final version with direct backend call
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./AuthScreens.css";
+
+function LoginScreen() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      setError("");
+      
+      // Direct backend call - no proxy needed!
+      const response = await axios.post(
+        `http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/login`,
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+
+      // Store the user data
+      localStorage.setItem("currentUser", JSON.stringify(response.data.user));
+
+      // Navigate to home page
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      setError(
+        error.response?.data?.message ||
+          "Login failed. Please check your credentials."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Login</h2>
+        {error && <div className="error-message">{error}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="form-control"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="form-control"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <div className="auth-link">
+          Don't have an account?{" "}
+          <Link to="/register">Click here to register</Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default LoginScreen;
+
+// ========================================
+// RegisterScreen.js - Final version with direct backend call
+// ========================================
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -33,9 +140,9 @@ function RegisterScreen() {
       setLoading(true);
       setError("");
       
-      // Use different proxy for auth calls
+      // Direct backend call - no proxy needed!
       const response = await axios.post(
-        `https://thingproxy.freeboard.io/fetch/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/register`,
+        `http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/register`,
         {
           name: formData.fullName,
           email: formData.email,
@@ -48,6 +155,7 @@ function RegisterScreen() {
         window.location.href = "/login";
       }, 2000);
     } catch (error) {
+      console.error("Registration error:", error);
       setError(
         error.response?.data?.message ||
           "Registration failed. Please try again."
