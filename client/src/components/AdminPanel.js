@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Working proxy URL
-const PROXY_BASE = "https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+const PROXY_BASE = process.env.REACT_APP_API_URL;
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
