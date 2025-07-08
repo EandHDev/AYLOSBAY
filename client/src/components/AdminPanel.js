@@ -40,7 +40,7 @@ function AdminLogin({ onLogin }) {
     try {
       console.log("Attempting login to:", `${API_URL}/api/auth/admin-login`);
 
-      const response = await axios.post(`${API_URL}/api/auth/admin-login`, {
+      const response = await axios.post(`https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/auth/admin-login`, {
         email,
         password,
       });
@@ -230,7 +230,7 @@ function ProtectedAdminPanel({ children }) {
       setAuthToken(token);
 
       // Verify token with backend
-      const response = await axios.get(`${API_URL}/api/auth/verify-admin`);
+      await axios.post(`https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/auth/admin-logout`);
 
       if (response.data.success) {
         setIsAuthenticated(true);
