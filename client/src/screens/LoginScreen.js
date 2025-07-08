@@ -26,9 +26,9 @@ function LoginScreen() {
       setLoading(true);
       setError("");
       
-      // Try alternative proxy for auth calls
+      // Use the SAME proxy that works for your rooms
       const response = await axios.post(
-        `https://api.allorigins.win/raw?url=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/login`,
+        `https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/login`,
         {
           email: formData.email,
           password: formData.password,
