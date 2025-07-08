@@ -32,8 +32,10 @@ function RegisterScreen() {
     try {
       setLoading(true);
       setError("");
+      
+      // Use different proxy for auth calls
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/users/register`,
+        `https://thingproxy.freeboard.io/fetch/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/register`,
         {
           name: formData.fullName,
           email: formData.email,
