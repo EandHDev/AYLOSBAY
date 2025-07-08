@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Try this proxy instead:
-const PROXY_BASE = "https://api.allorigins.win/raw?url=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+const PROXY_BASE = "https://cors-proxy.htmldriven.com/?url=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
 
