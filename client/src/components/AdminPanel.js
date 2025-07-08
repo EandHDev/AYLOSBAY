@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-// Working proxy URL
+// Working proxy URL - same as rooms use
 const PROXY_BASE = process.env.REACT_APP_API_URL;
 
 // Admin whitelist
