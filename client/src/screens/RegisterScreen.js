@@ -35,7 +35,7 @@ function RegisterScreen() {
       
       // Use the SAME proxy that successfully loads your rooms
       const response = await axios.post(
-        `https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/register`,
+        `${process.env.REACT_APP_API_URL}/api/users/register`,
         {
           name: formData.fullName,
           email: formData.email,
