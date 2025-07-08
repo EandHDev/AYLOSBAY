@@ -26,7 +26,7 @@ function LoginScreen() {
       setLoading(true);
       setError("");
       
-      // Use the SAME proxy that works for your rooms
+      // Use the SAME proxy that successfully loads your rooms
       const response = await axios.post(
         `https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/login`,
         {
@@ -41,6 +41,7 @@ function LoginScreen() {
       // Navigate to home page
       navigate("/");
     } catch (error) {
+      console.error("Login error:", error);
       setError(
         error.response?.data?.message ||
           "Login failed. Please check your credentials."
