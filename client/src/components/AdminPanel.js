@@ -1,12 +1,9 @@
-// AdminPanel.js - Updated with environment variables
+// AdminPanel.js - Fixed all proxy URLs
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-// Use environment variable with fallback to localhost
-const API_URL =
-  process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL}`;
-
-console.log("API URL:", API_URL); // Debug log to verify URL
+// Working proxy URL
+const PROXY_BASE = "https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
@@ -38,9 +35,9 @@ function AdminLogin({ onLogin }) {
     }
 
     try {
-      console.log("Attempting login to:", `${API_URL}/api/auth/admin-login`);
+      console.log("Attempting admin login...");
 
-      const response = await axios.post(`https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/auth/admin-login`, {
+      const response = await axios.post(`${PROXY_BASE}/api/auth/admin-login`, {
         email,
         password,
       });
@@ -229,8 +226,8 @@ function ProtectedAdminPanel({ children }) {
       // Set token for request
       setAuthToken(token);
 
-      // Verify token with backend
-      await axios.post(`https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/auth/admin-logout`);
+      // FIXED: Use verify-admin endpoint with proper response variable
+      const response = await axios.get(`${PROXY_BASE}/api/auth/verify-admin`);
 
       if (response.data.success) {
         setIsAuthenticated(true);
@@ -259,8 +256,8 @@ function ProtectedAdminPanel({ children }) {
 
   const handleLogout = async () => {
     try {
-      // Optional: Call backend logout endpoint
-      await axios.post(`${API_URL}/api/auth/admin-logout`);
+      // FIXED: Use proxy URL for logout
+      await axios.post(`${PROXY_BASE}/api/auth/admin-logout`);
     } catch (error) {
       // Ignore errors during logout
     } finally {
@@ -353,7 +350,7 @@ function ProtectedAdminPanel({ children }) {
   );
 }
 
-// Updated AdminPanel component with environment variable
+// Updated AdminPanel component with proxy URLs
 function AdminPanelContent() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -370,7 +367,7 @@ function AdminPanelContent() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${API_URL}/api/paystack/admin/bookings`
+        `${PROXY_BASE}/api/paystack/admin/bookings`
       );
       if (response.data.success) {
         setBookings(response.data.data);
@@ -395,7 +392,7 @@ function AdminPanelContent() {
 
     try {
       const response = await axios.put(
-        `${API_URL}/api/paystack/admin/bookings/${bookingId}/cancel`,
+        `${PROXY_BASE}/api/paystack/admin/bookings/${bookingId}/cancel`,
         { reason: "Cancelled by admin" }
       );
 
@@ -419,7 +416,7 @@ function AdminPanelContent() {
 
     try {
       const response = await axios.delete(
-        `${API_URL}/api/paystack/admin/bookings/${bookingId}`
+        `${PROXY_BASE}/api/paystack/admin/bookings/${bookingId}`
       );
 
       if (response.data.success) {
@@ -440,7 +437,7 @@ function AdminPanelContent() {
 
     try {
       const response = await axios.post(
-        `${API_URL}/api/paystack/admin/bookings/conflicts`,
+        `${PROXY_BASE}/api/paystack/admin/bookings/conflicts`,
         selectedDates
       );
 
