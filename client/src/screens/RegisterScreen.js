@@ -1,4 +1,4 @@
-// LoginScreen.js - Final version with direct backend call
+// LoginScreen.js - Using the same proxy that works for rooms
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -27,9 +27,9 @@ function LoginScreen() {
       setLoading(true);
       setError("");
       
-      // Direct backend call - no proxy needed!
+      // Use the SAME proxy that successfully loads your rooms
       const response = await axios.post(
-        `http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/login`,
+        `https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/login`,
         {
           email: formData.email,
           password: formData.password,
@@ -102,7 +102,7 @@ function LoginScreen() {
 export default LoginScreen;
 
 // ========================================
-// RegisterScreen.js - Final version with direct backend call
+// RegisterScreen.js - Using the same proxy that works for rooms
 // ========================================
 
 import React, { useState } from "react";
@@ -140,9 +140,9 @@ function RegisterScreen() {
       setLoading(true);
       setError("");
       
-      // Direct backend call - no proxy needed!
+      // Use the SAME proxy that successfully loads your rooms
       const response = await axios.post(
-        `http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/register`,
+        `https://api.codetabs.com/v1/proxy?quest=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com/api/users/register`,
         {
           name: formData.fullName,
           email: formData.email,
