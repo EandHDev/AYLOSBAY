@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "./AuthScreens.css";
 
+// Use the same working proxy as AdminPanel
+const BACKEND_URL = "https://proxy.cors.sh/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+
 function RegisterScreen() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -13,36 +16,35 @@ function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-
+    
     try {
       setLoading(true);
       setError("");
       
-      // Use the SAME proxy that successfully loads your rooms
+      // Use the working proxy URL instead of environment variable
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/users/register`,
+        `${BACKEND_URL}/api/users/register`,
         {
           name: formData.fullName,
           email: formData.email,
           password: formData.password,
         }
       );
-
+      
       setSuccess("Registration successful! Redirecting to login...");
       setTimeout(() => {
         window.location.href = "/login";
@@ -57,14 +59,13 @@ function RegisterScreen() {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="auth-container">
       <div className="auth-card">
         <h2>Register</h2>
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
-
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Full Name</label>
@@ -77,7 +78,6 @@ function RegisterScreen() {
               className="form-control"
             />
           </div>
-
           <div className="form-group">
             <label>Email</label>
             <input
@@ -89,7 +89,6 @@ function RegisterScreen() {
               className="form-control"
             />
           </div>
-
           <div className="form-group">
             <label>Password</label>
             <input
@@ -101,7 +100,6 @@ function RegisterScreen() {
               className="form-control"
             />
           </div>
-
           <div className="form-group">
             <label>Confirm Password</label>
             <input
@@ -113,12 +111,10 @@ function RegisterScreen() {
               className="form-control"
             />
           </div>
-
           <button type="submit" className="auth-button" disabled={loading}>
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
-
         <div className="auth-link">
           Already have an account? <Link to="/login">Login here</Link>
         </div>
