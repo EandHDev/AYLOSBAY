@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-// Try a different proxy service that should be more reliable
-const BACKEND_URL = "https://thingproxy.freeboard.io/fetch/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+// Going back to the proxy that worked last night
+const BACKEND_URL = "https://proxy.cors.sh/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
@@ -268,19 +268,13 @@ function ProtectedAdminPanel({ children }) {
   };
 
   const handleLogout = async () => {
-    try {
-      // Use direct backend URL for logout
-      await axios.post(`${BACKEND_URL}/api/auth/admin-logout`);
-    } catch (error) {
-      // Ignore errors during logout
-    } finally {
-      // Clear local storage and state
-      localStorage.removeItem("adminToken");
-      localStorage.removeItem("adminEmail");
-      setAuthToken(null);
-      setIsAuthenticated(false);
-      setAdminEmail("");
-    }
+    // Skip the backend logout call that might be causing issues
+    // Just clear local storage and state directly
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminEmail");
+    setAuthToken(null);
+    setIsAuthenticated(false);
+    setAdminEmail("");
   };
 
   if (loading) {
