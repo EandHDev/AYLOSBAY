@@ -39,11 +39,19 @@ function AdminLogin({ onLogin }) {
 
     try {
       console.log("Attempting admin login...");
+      console.log("Backend URL:", BACKEND_URL);
 
-      const response = await axios.post(`${BACKEND_URL}/api/auth/admin-login`, {
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 30000) // 30 second timeout
+      );
+
+      const loginPromise = axios.post(`${BACKEND_URL}/api/auth/admin-login`, {
         email,
         password,
       });
+
+      const response = await Promise.race([loginPromise, timeoutPromise]);
 
       if (response.data.success) {
         const { token } = response.data;
@@ -59,7 +67,9 @@ function AdminLogin({ onLogin }) {
       }
     } catch (error) {
       console.error("Login error:", error);
-      if (error.response?.status === 401) {
+      if (error.message === 'Request timeout') {
+        setError("Request timeout. Please try again.");
+      } else if (error.response?.status === 401) {
         setError("Invalid credentials");
       } else {
         setError("Login failed. Please try again.");
