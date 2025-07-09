@@ -35,6 +35,14 @@ app.use(
   })
 );
 
+// Add this AFTER your existing cors() setup
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://main.d2e1ko68ec6usk.amplifyapp.com');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
 // Handle preflight requests
 app.options('*', cors());
 
