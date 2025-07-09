@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-// Using alternative proxy for stability
-const BACKEND_URL = "https://api.allorigins.win/raw?url=http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+// Using corsproxy.io for better reliability
+const BACKEND_URL = "https://corsproxy.io/?http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
