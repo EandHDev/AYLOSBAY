@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./AuthScreens.css";
 
+// Use the same working proxy as AdminPanel and RegisterScreen
+const BACKEND_URL = "https://proxy.cors.sh/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+
 function LoginScreen() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -11,33 +14,32 @@ function LoginScreen() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setLoading(true);
       setError("");
       
-      // Use the SAME proxy that successfully loads your rooms
+      // Use the working proxy URL instead of environment variable
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/users/login`,
+        `${BACKEND_URL}/api/users/login`,
         {
           email: formData.email,
           password: formData.password,
         }
       );
-
+      
       // Store the user data
       localStorage.setItem("currentUser", JSON.stringify(response.data.user));
-
+      
       // Navigate to home page
       navigate("/");
     } catch (error) {
@@ -50,13 +52,12 @@ function LoginScreen() {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="auth-container">
       <div className="auth-card">
         <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
-
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email</label>
@@ -70,7 +71,6 @@ function LoginScreen() {
               placeholder="Enter your email"
             />
           </div>
-
           <div className="form-group">
             <label>Password</label>
             <input
@@ -83,12 +83,10 @@ function LoginScreen() {
               placeholder="Enter your password"
             />
           </div>
-
           <button type="submit" className="auth-button" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
         <div className="auth-link">
           Don't have an account?{" "}
           <Link to="/register">Click here to register</Link>
