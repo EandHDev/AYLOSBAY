@@ -4,7 +4,7 @@ import axios from "axios";
 import "./AuthScreens.css";
 
 // Direct backend connection - no proxy needed with SSL frontend
-const BACKEND_URL = "http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+const BACKEND_URL = "http://booking-app-backend-alb.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 
 function RegisterScreen() {
   const [formData, setFormData] = useState({
