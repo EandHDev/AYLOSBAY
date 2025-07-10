@@ -4,7 +4,7 @@ import axios from "axios";
 import "./AuthScreens.css";
 
 // Use the same working proxy as AdminPanel
-const BACKEND_URL = "https://proxy.cors.sh/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+const BACKEND_URL = "http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 
 function RegisterScreen() {
   const [formData, setFormData] = useState({
