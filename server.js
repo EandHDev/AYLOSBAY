@@ -14,17 +14,18 @@ const usersRoute = require("./routes/userRoute");
 const paystackRoute = require("./routes/paystackRoute");
 const { router: authRouter, verifyAdminToken } = require("./routes/auth");
 
-// CORS configuration
+// Single CORS configuration for all origins
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
       "https://main.d2e1ko68ec6usk.amplifyapp.com",
-      "https://d2e1ko68ec6usk.amplifyapp.com"
+      "https://d2e1ko68ec6usk.amplifyapp.com",
+      "https://enhbookings.com"
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
-      'Content-Type', 
+      'Content-Type',
       'Authorization',
       'X-Requested-With',
       'Accept',
@@ -35,26 +36,12 @@ app.use(
   })
 );
 
-// Add CORS headers for your SSL frontend
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://enhbookings.com');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
-
 // Body parser middleware
 app.use(express.json());
 
 // Health check routes
 app.get('/', (req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     message: 'Aylos Bay Hotel Booking API is running',
     status: 'healthy',
     timestamp: new Date().toISOString()
