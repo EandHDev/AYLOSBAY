@@ -35,6 +35,7 @@ app.use(
   })
 );
 
+// Add CORS headers for your SSL frontend
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'https://enhbookings.com');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
