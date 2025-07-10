@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Direct backend connection - no proxy needed with SSL frontend
-const BACKEND_URL = "https://api.allorigins.win/raw?url=http://booking-app-backend-alb.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+const BACKEND_URL = "https://api.enhbookings.com";
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
