@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Going back to the proxy that worked last night
-const BACKEND_URL = "https://proxy.cors.sh/http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
+const BACKEND_URL = "http://booking-app-backend-env.eba-mnfnnxen.us-east-1.elasticbeanstalk.com";
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
