@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 function AddRoom() {
   const [room, setRoom] = useState({
@@ -15,10 +16,7 @@ function AddRoom() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/rooms/addroom`,
-        room
-      );
+      const result = await axios.post(`${BACKEND_URL}/api/rooms/addroom`, room);
       console.log(result.data);
       alert("Room Added Successfully");
       // Clear form

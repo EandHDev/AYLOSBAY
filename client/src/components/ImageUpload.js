@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 function ImageUpload({ onUploadSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ function ImageUpload({ onUploadSuccess }) {
     reader.onloadend = async () => {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/upload/uploadimage`,
+          `${BACKEND_URL}/api/upload/uploadimage`,
           {
             image: reader.result,
           }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./BookingScreen.css";
+import { BACKEND_URL } from "../config";
 
 // Assuming you have Ant Design installed for messages, otherwise replace with your toast/alert system
 import { message } from "antd"; // npm install antd
@@ -49,7 +50,7 @@ function BookingScreen() {
 
       // First, initialize payment on your backend
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/paystack/initialize-payment`,
+        `${BACKEND_URL}/api/paystack/initialize-payment`,
         {
           amount: totalAmount * 100, // Convert to pesewas (GHS to pesewas)
           email: user.email,

@@ -3,6 +3,7 @@ import axios from "axios";
 import Room from "../components/Room";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Homescreen.css";
+import { BACKEND_URL } from "../config";
 
 function Homescreen() {
   const [rooms, setRooms] = useState([]);
@@ -21,9 +22,7 @@ function Homescreen() {
   const fetchRooms = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/rooms/getallrooms`
-      );
+      const response = await axios.get(`${BACKEND_URL}/api/rooms/getallrooms`);
 
       if (!Array.isArray(response.data)) {
         throw new Error("API response is not an array");
@@ -72,7 +71,7 @@ function Homescreen() {
       console.log("Checking availability for:", fromDate, "to", toDate);
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/rooms/check-availability`,
+        `${BACKEND_URL}/api/rooms/check-availability`,
         {
           fromDate,
           toDate,

@@ -4,7 +4,7 @@ import axios from "axios";
 import "./AuthScreens.css";
 
 // Direct backend connection - no proxy needed with SSL frontend
-const BACKEND_URL = "https://api.enhbookings.com";
+import { BACKEND_URL } from "../config";
 
 function RegisterScreen() {
   const [formData, setFormData] = useState({
@@ -16,35 +16,32 @@ function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    
+
     try {
       setLoading(true);
       setError("");
-      
+
       // Use the working proxy URL instead of environment variable
-      const response = await axios.post(
-        `${BACKEND_URL}/api/users/register`,
-        {
-          name: formData.fullName,
-          email: formData.email,
-          password: formData.password,
-        }
-      );
-      
+      const response = await axios.post(`${BACKEND_URL}/api/users/register`, {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
+
       setSuccess("Registration successful! Redirecting to login...");
       setTimeout(() => {
         window.location.href = "/login";
@@ -59,7 +56,7 @@ function RegisterScreen() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="auth-container">
       <div className="auth-card">

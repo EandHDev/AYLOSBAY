@@ -4,7 +4,7 @@ import axios from "axios";
 import "./AuthScreens.css";
 
 // Direct backend connection - no proxy needed with SSL frontend
-const BACKEND_URL = "https://api.enhbookings.com";
+import { BACKEND_URL } from "../config";
 
 function LoginScreen() {
   const navigate = useNavigate();
@@ -14,32 +14,29 @@ function LoginScreen() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
       setError("");
-      
+
       // Use the working proxy URL instead of environment variable
-      const response = await axios.post(
-        `${BACKEND_URL}/api/users/login`,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-      );
-      
+      const response = await axios.post(`${BACKEND_URL}/api/users/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
+
       // Store the user data
       localStorage.setItem("currentUser", JSON.stringify(response.data.user));
-      
+
       // Navigate to home page
       navigate("/");
     } catch (error) {
@@ -52,7 +49,7 @@ function LoginScreen() {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="auth-container">
       <div className="auth-card">
