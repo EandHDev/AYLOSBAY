@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 function RoomDetails() {
   const { roomid } = useParams();
@@ -13,9 +14,7 @@ function RoomDetails() {
     const fetchRoom = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/rooms/${roomid}`
-        );
+        const { data } = await axios.get(`${BACKEND_URL}/api/rooms/${roomid}`);
         setRoom(data);
       } catch (err) {
         setError(err.message);

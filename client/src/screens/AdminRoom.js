@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 function AdminRoom() {
   const [rooms, setRooms] = useState([]);
@@ -12,9 +13,7 @@ function AdminRoom() {
 
   const fetchRooms = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/rooms/getallrooms`
-      );
+      const response = await axios.get(`${BACKEND_URL}/api/rooms/getallrooms`);
       setRooms(response.data);
       setLoading(false);
     } catch (error) {
@@ -32,12 +31,9 @@ function AdminRoom() {
       reader.readAsDataURL(file);
       reader.onloadend = async () => {
         try {
-          await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/upload/uploadimage/${roomId}`,
-            {
-              image: reader.result,
-            }
-          );
+          await axios.post(`${BACKEND_URL}/api/upload/uploadimage/${roomId}`, {
+            image: reader.result,
+          });
 
           alert("Image uploaded successfully!");
           fetchRooms(); // Refresh rooms list

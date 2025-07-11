@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 function UserDashboard() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function UserDashboard() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/paystack/user/bookings/${user._id}`
+        `${BACKEND_URL}/api/paystack/user/bookings/${user._id}`
       );
 
       if (response.data.success) {

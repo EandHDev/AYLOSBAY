@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Direct backend connection - no proxy needed with SSL frontend
-const BACKEND_URL = "https://api.enhbookings.com";
+import { BACKEND_URL } from "../config";
 
 // Admin whitelist
 const ADMIN_EMAILS = ["nigel@ianaitch.com", "elijah@ianaitch.com"];
@@ -42,8 +42,9 @@ function AdminLogin({ onLogin }) {
       console.log("Backend URL:", BACKEND_URL);
 
       // Add timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), 30000) // 30 second timeout
+      const timeoutPromise = new Promise(
+        (_, reject) =>
+          setTimeout(() => reject(new Error("Request timeout")), 30000) // 30 second timeout
       );
 
       const loginPromise = axios.post(`${BACKEND_URL}/api/auth/admin-login`, {
@@ -67,7 +68,7 @@ function AdminLogin({ onLogin }) {
       }
     } catch (error) {
       console.error("Login error:", error);
-      if (error.message === 'Request timeout') {
+      if (error.message === "Request timeout") {
         setError("Request timeout. Please try again.");
       } else if (error.response?.status === 401) {
         setError("Invalid credentials");
