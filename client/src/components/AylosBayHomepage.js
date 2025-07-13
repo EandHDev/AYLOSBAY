@@ -72,7 +72,7 @@ const AylosBayHomepage = () => {
       ],
     },
     {
-      name: "Lakeside Luxury Room",
+      name: "Ideal Events Locale",
       image:
         "https://res.cloudinary.com/dugvudqm6/image/upload/c_fill,w_800,h_600,g_center,q_auto,f_auto/v1752366513/475980092_1068103765336418_3504903717428290079_n_cshsjd.jpg",
       description: "Beautiful room with stunning lake views and modern comfort",
@@ -84,7 +84,7 @@ const AylosBayHomepage = () => {
       ],
     },
     {
-      name: "Superior Bay Room",
+      name: "Lole Me Bar",
       image:
         "https://res.cloudinary.com/dugvudqm6/image/upload/c_fill,w_800,h_600,g_center,q_auto,f_auto/v1752366080/IMG_1409_dgct9g.jpg",
       description:
@@ -92,7 +92,7 @@ const AylosBayHomepage = () => {
       features: ["King Bed", "Bay View", "Elegant Design", "Full Amenities"],
     },
     {
-      name: "Classic Comfort Suite",
+      name: "Meals By The Lake",
       image:
         "https://res.cloudinary.com/dugvudqm6/image/upload/c_fill,w_800,h_600,g_center,q_auto,f_auto/v1752366078/IMG_1661_vc0vhr.jpg",
       description: "Thoughtfully designed suite combining comfort with style",
