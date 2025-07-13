@@ -594,7 +594,7 @@ const AylosBayHomepage = () => {
               textAlign: "center",
             }}
           >
-            <h2 style={sectionTitleStyle()}>A Haven of Tranquil Luxury</h2>
+            <h2 style={sectionTitleStyle()}>A Haven of Tranquil Comfort</h2>
             <p
               style={{
                 fontSize: "1.125rem",
@@ -629,7 +629,7 @@ const AylosBayHomepage = () => {
       <section id="rooms" style={sectionStyle()}>
         <div style={containerStyle}>
           <div style={sectionHeaderStyle}>
-            <h2 style={sectionTitleStyle()}>Luxury Accommodations</h2>
+            <h2 style={sectionTitleStyle()}>Comfy Accommodations</h2>
             <p style={sectionSubtitleStyle()}>
               Six distinctive rooms and suites, each offering a unique
               perspective on lakeside luxury
