@@ -50,7 +50,7 @@ const AylosBayHomepage = () => {
     {
       name: "Premium Garden Room",
       image:
-        "https://res.cloudinary.com/dugvudqm6/image/upload/c_fill,w_800,h_600,g_center,q_auto,f_auto/v1743956995/IMG_9460_nqrm7h.jpg",
+        "https://res.cloudinary.com/dugvudqm6/image/upload/c_fill,w_800,h_600,g_center,q_auto,f_auto/v1743956586/IMG_9441_v4xiwm.jpg",
       description: "Elegant room overlooking manicured gardens",
       features: [
         "Queen Bed",
@@ -477,7 +477,7 @@ const AylosBayHomepage = () => {
               alt="Aylos Bay Hotel Logo"
               style={logoImageStyle}
             />
-            <h1 style={logoTextStyle}>Aylos Bay Hotel</h1>
+            <h1 style={logoTextStyle}>Aylos Bay Resort</h1>
           </div>
 
           <nav style={navMenuStyle}>
@@ -749,14 +749,14 @@ const AylosBayHomepage = () => {
                 <Phone style={contactIconStyle} />
                 <div>
                   <p style={{ fontWeight: "500" }}>Phone</p>
-                  <p style={{ color: "#6b7280" }}>+1 (555) 123-4567</p>
+                  <p style={{ color: "#6b7280" }}>+233 24 337 4443</p>
                 </div>
               </div>
               <div style={contactItemStyle}>
                 <Mail style={contactIconStyle} />
                 <div>
                   <p style={{ fontWeight: "500" }}>Email</p>
-                  <p style={{ color: "#6b7280" }}>info@aylosbayhotel.com</p>
+                  <p style={{ color: "#6b7280" }}>info@aylosbayghana.com</p>
                 </div>
               </div>
               <div style={contactItemStyle}>
@@ -766,7 +766,7 @@ const AylosBayHomepage = () => {
                   <p style={{ color: "#6b7280" }}>
                     123 Lakeside Drive
                     <br />
-                    Aylos Bay, State 12345
+                    Atimpoku, Ghana
                   </p>
                 </div>
               </div>

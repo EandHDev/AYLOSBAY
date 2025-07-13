@@ -1,25 +1,25 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Aylos Bay",
+  "name": "Aylos Bay Resort - The Ideal Getaway",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://res.cloudinary.com/dugvudqm6/image/upload/c_fit,w_64,h_64,f_png/v1752369918/PHOTO-2025-03-20-09-16-17_irdknb.jpg",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/png"
     },
     {
-      "src": "logo192.png",
+      "src": "https://res.cloudinary.com/dugvudqm6/image/upload/c_fit,w_192,h_192,f_png/v1752369918/PHOTO-2025-03-20-09-16-17_irdknb.jpg",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "https://res.cloudinary.com/dugvudqm6/image/upload/c_fit,w_512,h_512,f_png/v1752369918/PHOTO-2025-03-20-09-16-17_irdknb.jpg",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#fbbf24",
+  "background_color": "#1f2937"
 }
