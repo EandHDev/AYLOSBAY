@@ -50,7 +50,7 @@ const AylosBayHomepage = () => {
     {
       name: "Premium Garden Room",
       image:
-        "https://res.cloudinary.com/dugvudqm6/image/upload/c_fill,w_800,h_600,g_center,q_auto,f_auto/v1743956995/IMG_9460_nqrm7h.jpg",
+        "https://res.cloudinary.com/dugvudqm6/image/upload/c_fill,w_800,h_600,g_center,q_auto,f_auto/v1743956586/IMG_9441_v4xiwm.jpg",
       description: "Elegant room overlooking manicured gardens",
       features: [
         "Queen Bed",
