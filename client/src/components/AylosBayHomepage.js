@@ -749,14 +749,14 @@ const AylosBayHomepage = () => {
                 <Phone style={contactIconStyle} />
                 <div>
                   <p style={{ fontWeight: "500" }}>Phone</p>
-                  <p style={{ color: "#6b7280" }}>+1 (555) 123-4567</p>
+                  <p style={{ color: "#6b7280" }}>+233 24 337 4443</p>
                 </div>
               </div>
               <div style={contactItemStyle}>
                 <Mail style={contactIconStyle} />
                 <div>
                   <p style={{ fontWeight: "500" }}>Email</p>
-                  <p style={{ color: "#6b7280" }}>info@aylosbayhotel.com</p>
+                  <p style={{ color: "#6b7280" }}>info@aylosbayghana.com</p>
                 </div>
               </div>
               <div style={contactItemStyle}>
@@ -766,7 +766,7 @@ const AylosBayHomepage = () => {
                   <p style={{ color: "#6b7280" }}>
                     123 Lakeside Drive
                     <br />
-                    Aylos Bay, State 12345
+                    Atimpoku, Ghana
                   </p>
                 </div>
               </div>
