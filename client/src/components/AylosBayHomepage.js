@@ -477,7 +477,7 @@ const AylosBayHomepage = () => {
               alt="Aylos Bay Hotel Logo"
               style={logoImageStyle}
             />
-            <h1 style={logoTextStyle}>Aylos Bay Hotel</h1>
+            <h1 style={logoTextStyle}>Aylos Bay Resort</h1>
           </div>
 
           <nav style={navMenuStyle}>
